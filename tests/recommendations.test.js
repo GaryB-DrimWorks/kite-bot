@@ -52,6 +52,7 @@ test("NE wind scores Takapuna and rejects Muriwai as offshore", () => {
   assert.equal(west.score, 0);
   assert.equal(west.rating, "no-go");
   assert.equal(west.name, "Muriwai Beach");
+  assert.equal(west.conditions.windGustsKn, 20);
   assert.ok(west.conditions.effectiveWindKn);
 });
 

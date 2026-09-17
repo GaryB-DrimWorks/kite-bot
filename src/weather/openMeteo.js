@@ -99,7 +99,7 @@ export function summarizeConditions(forecast, marine, at = new Date()) {
   const hour = hourlySlice(forecast.hourly, index, 1)[0] || {};
   const sea = marineAt(marine, index);
   const windSpeed = current.wind_speed_10m ?? hour.windSpeed ?? 0;
-  const windGusts = current.wind_gusts_10m ?? hour.windGusts ?? windSpeed;
+  const windGusts = Number(current.wind_gusts_10m ?? hour.windGusts ?? windSpeed) || windSpeed;
   const windDirection = current.wind_direction_10m ?? hour.windDirection ?? 0;
   const apparent = effectiveWind(
     windSpeed,

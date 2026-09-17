@@ -31,6 +31,40 @@ function travelPenalty(spot, profile, availableHours) {
   return 0;
 }
 
+function publicConditions(conditions) {
+  return {
+    windSpeedKn: conditions.windSpeedKn,
+    windGustsKn: conditions.windGustsKn,
+    effectiveWindKn: conditions.effectiveWindKn,
+    windDirection: conditions.windDirection,
+    gustFactor: conditions.gustFactor,
+    directionVariabilityDeg: conditions.directionVariabilityDeg,
+    temperatureC: conditions.temperatureC,
+    humidityPct: conditions.humidityPct,
+    pressureHpa: conditions.pressureHpa,
+    waveHeightM: conditions.waveHeightM,
+    windWaveHeightM: conditions.windWaveHeightM,
+    swellHeightM: conditions.swellHeightM,
+    currentSpeedKn: conditions.currentSpeedKn
+  };
+}
+
+function scoredSpot(spot, { score, rating, reasons, tideFit, conditions, profile }) {
+  return {
+    spotId: spot.id,
+    name: spot.name,
+    score,
+    rating,
+    reasons,
+    travelFromCbdMin: spot.travelFromCbdMin,
+    popularity: spot.popularity,
+    coast: spot.coast,
+    tideFit,
+    safety: safetyAdvice({ spot, conditions, profile, tideFit }),
+    conditions: publicConditions(conditions)
+  };
+}
+
 export function scoreSpot({
   spot,
   conditions,
@@ -52,32 +86,14 @@ export function scoreSpot({
   let score = 12;
 
   if (isOffshore(conditions.windDirection, spot.shoreFacing)) {
-    return {
-      spotId: spot.id,
-      name: spot.name,
+    return scoredSpot(spot, {
       score: 0,
       rating: "no-go",
       reasons: ["Offshore wind"],
-      travelFromCbdMin: spot.travelFromCbdMin,
-      popularity: spot.popularity,
-      coast: spot.coast,
       tideFit,
-      safety: safetyAdvice({ spot, conditions, profile, tideFit }),
-      conditions: {
-        windSpeedKn: conditions.windSpeedKn,
-        effectiveWindKn: conditions.effectiveWindKn,
-        windDirection: conditions.windDirection,
-        gustFactor: conditions.gustFactor,
-        directionVariabilityDeg: conditions.directionVariabilityDeg,
-        temperatureC: conditions.temperatureC,
-        humidityPct: conditions.humidityPct,
-        pressureHpa: conditions.pressureHpa,
-        waveHeightM: conditions.waveHeightM,
-        windWaveHeightM: conditions.windWaveHeightM,
-        swellHeightM: conditions.swellHeightM,
-        currentSpeedKn: conditions.currentSpeedKn
-      }
-    };
+      conditions,
+      profile
+    });
   }
 
   if (isDirectionInWindow(conditions.windDirection, spot.preferredCenter, spot.preferredWidth)) {
@@ -125,32 +141,14 @@ export function scoreSpot({
   score = clamp(Math.round(score), 0, 100);
   const rating = score >= 70 ? "go" : score >= 45 ? "maybe" : "stay-home";
 
-  return {
-    spotId: spot.id,
-    name: spot.name,
+  return scoredSpot(spot, {
     score,
     rating,
     reasons,
-    travelFromCbdMin: spot.travelFromCbdMin,
-    popularity: spot.popularity,
-    coast: spot.coast,
     tideFit,
-    safety: safetyAdvice({ spot, conditions, profile, tideFit }),
-    conditions: {
-      windSpeedKn: conditions.windSpeedKn,
-      effectiveWindKn: conditions.effectiveWindKn,
-      windDirection: conditions.windDirection,
-      gustFactor: conditions.gustFactor,
-      directionVariabilityDeg: conditions.directionVariabilityDeg,
-      temperatureC: conditions.temperatureC,
-      humidityPct: conditions.humidityPct,
-      pressureHpa: conditions.pressureHpa,
-      waveHeightM: conditions.waveHeightM,
-      windWaveHeightM: conditions.windWaveHeightM,
-      swellHeightM: conditions.swellHeightM,
-      currentSpeedKn: conditions.currentSpeedKn
-    }
-  };
+    conditions,
+    profile
+  });
 }
 
 export function rankSpots(args) {

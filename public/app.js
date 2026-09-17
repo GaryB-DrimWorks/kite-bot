@@ -49,7 +49,7 @@ function renderNow(data) {
     <p class="eyebrow">Now · ${data.location.name}</p>
     <p><strong>${Math.round(c.windSpeedKn)} kn</strong> from ${Math.round(c.windDirection)}°
       · effective <strong>${c.effectiveWindKn} kn</strong></p>
-    <p>Gusts ${Math.round(c.windGustsKn)} kn
+    <p>Gusts ${Number.isFinite(c.windGustsKn) ? Math.round(c.windGustsKn) : "–"} kn
       · gust factor ${c.gustFactor ? c.gustFactor.toFixed(2) : "–"}
       · dir σ ${c.directionVariabilityDeg}°</p>
     <p>${Math.round(c.temperatureC)}°C · ${Math.round(c.humidityPct)}% RH · ${Math.round(c.pressureHpa)} hPa</p>
