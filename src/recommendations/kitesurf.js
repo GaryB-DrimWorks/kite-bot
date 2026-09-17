@@ -54,11 +54,29 @@ export function scoreSpot({
   if (isOffshore(conditions.windDirection, spot.shoreFacing)) {
     return {
       spotId: spot.id,
+      name: spot.name,
       score: 0,
       rating: "no-go",
       reasons: ["Offshore wind"],
+      travelFromCbdMin: spot.travelFromCbdMin,
+      popularity: spot.popularity,
+      coast: spot.coast,
       tideFit,
-      safety: safetyAdvice({ spot, conditions, profile, tideFit })
+      safety: safetyAdvice({ spot, conditions, profile, tideFit }),
+      conditions: {
+        windSpeedKn: conditions.windSpeedKn,
+        effectiveWindKn: conditions.effectiveWindKn,
+        windDirection: conditions.windDirection,
+        gustFactor: conditions.gustFactor,
+        directionVariabilityDeg: conditions.directionVariabilityDeg,
+        temperatureC: conditions.temperatureC,
+        humidityPct: conditions.humidityPct,
+        pressureHpa: conditions.pressureHpa,
+        waveHeightM: conditions.waveHeightM,
+        windWaveHeightM: conditions.windWaveHeightM,
+        swellHeightM: conditions.swellHeightM,
+        currentSpeedKn: conditions.currentSpeedKn
+      }
     };
   }
 

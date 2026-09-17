@@ -66,7 +66,7 @@ function renderSpots(data) {
           <strong>${row.name}</strong><br>
           <span class="muted">${row.rating} · ${row.travelFromCbdMin} min from CBD · ${row.coast}</span>
         </span>
-        <span class="muted">${row.conditions.effectiveWindKn} kn</span>
+        <span class="muted">${row.conditions?.effectiveWindKn ?? "–"} kn</span>
       </button>`;
     })
     .join("");
@@ -249,7 +249,8 @@ document.getElementById("keys-form").addEventListener("submit", async (event) =>
   await load();
 });
 
-load().catch(() => {
+load().catch((error) => {
+  console.error(error);
   document.getElementById("now-card").textContent =
     "Could not load conditions. Check the weather service and try again.";
 });
