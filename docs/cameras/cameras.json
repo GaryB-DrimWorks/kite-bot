@@ -1,0 +1,399 @@
+[
+  {
+    "id": "takapuna",
+    "name": "Takapuna",
+    "spot": "Takapuna",
+    "url": "https://www.windsurf.co.nz/windsurf_cam_takapuna.asp",
+    "imageUrl": "https://images.webcamgalore.com/394-current-webcam-Takapuna.jpg",
+    "windDirs": [
+      "NE",
+      "E",
+      "N"
+    ],
+    "notes": "Primary North Shore kite beach. Windsurf page OK; local JPGs last updated Dec 2025 (stale). Webcam Galore still was fresh at audit (2026-09-18 PT). Prefer HTTPS page + Galore still until windsurf local files resume updating."
+  },
+  {
+    "id": "takapuna-2",
+    "name": "Takapuna 2",
+    "spot": "Takapuna",
+    "url": "https://www.windsurf.co.nz/windsurf_cam_takapuna2.asp",
+    "imageUrl": "https://www.windsurf.co.nz/webcams/takapuna/takapuna1_lg.jpg",
+    "windDirs": [
+      "NE",
+      "E",
+      "N"
+    ],
+    "notes": "Second Windsurf Takapuna view. Local large JPG last-modified 2025-12-20 \u2014 treat as uncertain/stale until refreshed. Available for sponsorship on site."
+  },
+  {
+    "id": "orewa",
+    "name": "Orewa",
+    "spot": "Orewa",
+    "url": "https://www.windsurf.co.nz/windsurf_cam_orewa.asp",
+    "imageUrl": "https://www.windsurf.co.nz/webcams/orewa.jpg",
+    "windDirs": [
+      "NE",
+      "E",
+      "N"
+    ],
+    "notes": "Working live JPEG (Last-Modified current at audit). East-coast / Hibiscus Coast kite & foil spot. Also mirrored via Orewa Surf Lessons page."
+  },
+  {
+    "id": "orewa-2",
+    "name": "Orewa 2",
+    "spot": "Orewa",
+    "url": "https://www.windsurf.co.nz/windsurf_cam_orewa2.asp",
+    "imageUrl": "https://www.windsurf.co.nz/webcams/orewa2.jpg",
+    "windDirs": [
+      "NE",
+      "E",
+      "N"
+    ],
+    "notes": "Second Orewa Windsurf cam; live JPEG current at audit."
+  },
+  {
+    "id": "orewa-bar-surfline",
+    "name": "Orewa Bar (Surfline still)",
+    "spot": "Orewa",
+    "url": "https://www.surfline.com/surf-report/omaha-beach/6178698263e26bab7abf55d9",
+    "imageUrl": "https://camstills.cdn-surfline.com/ap-southeast-2/nz-orewabar/latest_full.jpg",
+    "windDirs": [
+      "NE",
+      "E"
+    ],
+    "notes": "Surfline still image works without login (video may need premium). Linked from Omaha Surfline nearby cams. Uncertain whether UI should deep-link still vs report page."
+  },
+  {
+    "id": "muriwai",
+    "name": "Muriwai",
+    "spot": "Muriwai",
+    "url": "https://www.windsurf.co.nz/windsurf_cam_muriwai.asp",
+    "imageUrl": "https://www.windsurf.co.nz/webcams/muriwai/muriwai.jpg",
+    "windDirs": [
+      "SW",
+      "W",
+      "NW",
+      "S"
+    ],
+    "notes": "West-coast wave kite spot. Windsurf cam marked BACK ONLINE; JPEG current at audit."
+  },
+  {
+    "id": "muriwai-surfline",
+    "name": "Muriwai (Surfline still)",
+    "spot": "Muriwai",
+    "url": "https://www.surfline.com/surf-report/muriwai-beach/584204204e65fad6a7709674",
+    "imageUrl": "https://camstills.cdn-surfline.com/ap-southeast-2/nz-muriwai/latest_full.jpg",
+    "windDirs": [
+      "SW",
+      "W",
+      "NW"
+    ],
+    "notes": "Surfline latest_full.jpg verified live. Also nz-muriwailower still available. Video cam often paywalled."
+  },
+  {
+    "id": "piha-surfline",
+    "name": "Piha (Surfline still)",
+    "spot": "Piha",
+    "url": "https://www.surfline.com/surf-report/piha/5842041f4e65fad6a7708d7c",
+    "imageUrl": "https://camstills.cdn-surfline.com/ap-southeast-2/nz-piha/latest_full.jpg",
+    "windDirs": [
+      "SW",
+      "W",
+      "NW"
+    ],
+    "notes": "West-coast alternative to Muriwai. Surfline still live; Surf.co.nz Piha cam listed as coming soon."
+  },
+  {
+    "id": "karekare-surfline",
+    "name": "Karekare (Surfline still)",
+    "spot": "Karekare",
+    "url": "https://www.surfline.com/surf-report/muriwai-beach/584204204e65fad6a7709674",
+    "imageUrl": "https://camstills.cdn-surfline.com/ap-southeast-2/nz-karekare/latest_full.jpg",
+    "windDirs": [
+      "SW",
+      "W",
+      "NW"
+    ],
+    "notes": "Nearby west-coast still from Surfline CDN; useful for swell/wind visual when Muriwai/Piha are on. Marked uncertain for kite popularity vs Muriwai."
+  },
+  {
+    "id": "pt-chev",
+    "name": "Point Chevalier",
+    "spot": "Point Chevalier",
+    "url": "https://www.windsurf.co.nz/windsurf_cam_ptchev.asp",
+    "imageUrl": "https://www.windsurf.co.nz/webcams/ptchev/ptchev.jpg",
+    "windDirs": [
+      "SW",
+      "W",
+      "NW",
+      "NE"
+    ],
+    "notes": "Popular Waitemata harbour kite spot. Live JPEG current at audit."
+  },
+  {
+    "id": "pt-chev-2",
+    "name": "Point Chevalier 2 (IPCamLive)",
+    "spot": "Point Chevalier",
+    "url": "https://www.windsurf.co.nz/windsurf_cam_ptchev2.asp",
+    "imageUrl": "",
+    "windDirs": [
+      "SW",
+      "W",
+      "NW",
+      "NE"
+    ],
+    "notes": "Embeds g3.ipcamlive.com player alias=601f58dfd8425. Player URL returned tiny HTML at audit \u2014 UNCERTAIN/possibly dead. Keep page link; verify before UI embed."
+  },
+  {
+    "id": "mairangi-bay",
+    "name": "Mairangi Bay",
+    "spot": "Mairangi Bay",
+    "url": "https://www.windsurf.co.nz/windsurf_cam_mairangibay.asp",
+    "imageUrl": "https://www.windsurf.co.nz/webcams/mairangi1_lg.jpg",
+    "windDirs": [
+      "NE",
+      "E",
+      "N"
+    ],
+    "notes": "East-coast / North Shore. Live JPEG current at audit."
+  },
+  {
+    "id": "mairangi-bay-2",
+    "name": "Mairangi Bay 2",
+    "spot": "Mairangi Bay",
+    "url": "https://www.windsurf.co.nz/windsurf_cam_mairangibay2.asp",
+    "imageUrl": "https://www.windsurf.co.nz/webcams/mairangi2_lg.jpg",
+    "windDirs": [
+      "NE",
+      "E",
+      "N"
+    ],
+    "notes": "Second Mairangi view; live JPEG current at audit."
+  },
+  {
+    "id": "manly",
+    "name": "Manly",
+    "spot": "Manly (Whangaparaoa)",
+    "url": "https://www.windsurf.co.nz/windsurf_cam_manly.asp",
+    "imageUrl": "https://www.windsurf.co.nz/webcams/manly/manly_sm.jpg",
+    "windDirs": [
+      "NE",
+      "E",
+      "N",
+      "NW"
+    ],
+    "notes": "Was commented-out on legacy page but cam + JPEG are live. Also WeatherLink embed on page. Good for Shakes/Whangaparaoa sessions."
+  },
+  {
+    "id": "browns-bay",
+    "name": "Browns Bay",
+    "spot": "Browns Bay",
+    "url": "https://www.windsurf.co.nz/windsurf_cam_brownsbay.asp",
+    "imageUrl": "https://www.windsurf.co.nz/webcams/brownsbay/brownsbay.jpg",
+    "windDirs": [
+      "NE",
+      "E",
+      "N"
+    ],
+    "notes": "NEW vs legacy HTML. Live JPEG current. East-coast North Shore fill-in between Takapuna and Orewa."
+  },
+  {
+    "id": "bayswater",
+    "name": "Bayswater",
+    "spot": "Bayswater / Shoal Bay",
+    "url": "https://www.windsurf.co.nz/windsurf_cam_bayswater.asp",
+    "imageUrl": "https://www.windsurf.co.nz/webcams/bayswater.jpg",
+    "windDirs": [
+      "SW",
+      "W",
+      "NW",
+      "NE"
+    ],
+    "notes": "NEW dedicated page. Live JPEG current. Shoal Bay legacy page currently proxies this cam."
+  },
+  {
+    "id": "shoal-bay",
+    "name": "Shoal Bay",
+    "spot": "Shoal Bay",
+    "url": "https://www.windsurf.co.nz/windsurf_cam_shoalbay.asp",
+    "imageUrl": "https://www.windsurf.co.nz/webcams/bayswater.jpg",
+    "windDirs": [
+      "SW",
+      "W",
+      "NW",
+      "NE"
+    ],
+    "notes": "Page online but own shoalbay2.jpg frozen since 2021-12-21. Site text says Bayswater cam added. Recommend Bayswater image/page as functional replacement."
+  },
+  {
+    "id": "st-heliers",
+    "name": "St Heliers",
+    "spot": "St Heliers",
+    "url": "https://www.windsurf.co.nz/windsurf_cam_stheliers.asp",
+    "imageUrl": "http://www.destin.co.nz/weather/webcam.jpg",
+    "windDirs": [
+      "NE",
+      "E",
+      "N"
+    ],
+    "notes": "Page HTTPS OK. Live still only on HTTP destin.co.nz (HTTPS path 404). Prefer windsurf page as entry; note mixed-content if embedding image directly."
+  },
+  {
+    "id": "farm-cove",
+    "name": "Farm Cove / Tamaki",
+    "spot": "Farm Cove / Bucklands Beach",
+    "url": "https://www.windsurf.co.nz/windsurf_cam_farmcove.asp",
+    "imageUrl": "https://cameraftpapi.drivehq.com/api/Camera/GetCameraThumbnail.ashx?parentID=278623865&shareID=14262225",
+    "windDirs": [
+      "NE",
+      "E",
+      "N",
+      "SW"
+    ],
+    "notes": "NEW relative to legacy naming. CameraFTP live JPEG (~198KB) verified. Same live feed appears on Tamaki/Bucklands page. Also PredictWind lists Bucklands Beach Yacht Club."
+  },
+  {
+    "id": "tamaki-bucklands",
+    "name": "Bucklands Beach / Tamaki",
+    "spot": "Bucklands Beach",
+    "url": "https://www.windsurf.co.nz/windsurf_cam_tamaki.asp",
+    "imageUrl": "https://cameraftpapi.drivehq.com/api/Camera/GetCameraThumbnail.ashx?parentID=278623865&shareID=14262225",
+    "windDirs": [
+      "NE",
+      "E",
+      "N",
+      "SW"
+    ],
+    "notes": "Legacy Bucklands + Tamaki both pointed here. Static tamaki.jpg frozen since 2016; use CameraFTP thumbnail/player instead. Page also notes new camera testing / sponsorship."
+  },
+  {
+    "id": "pine-harbour",
+    "name": "Pine Harbour",
+    "spot": "Pine Harbour / Beachlands",
+    "url": "https://www.windsurf.co.nz/windsurf_cam_pine-harbour.asp",
+    "imageUrl": "https://cameraftpapi.drivehq.com/api/Camera/GetCameraThumbnail.ashx?parentID=311029379&shareID=14771069",
+    "windDirs": [
+      "NE",
+      "E",
+      "SW"
+    ],
+    "notes": "Page + CameraFTP player embed exist, but thumbnail is tiny PNG (~6KB) \u2014 likely offline/placeholder. UNCERTAIN. Keep page; do not treat still as live."
+  },
+  {
+    "id": "lake-pupuke",
+    "name": "Lake Pupuke",
+    "spot": "Lake Pupuke",
+    "url": "https://www.windsurf.co.nz/windsurf_cam_lake-pupuke.asp",
+    "imageUrl": "https://cameraftpapi.drivehq.com/api/Camera/GetCameraThumbnail.ashx?parentID=289984293&shareID=14421426",
+    "windDirs": [
+      "NE",
+      "E",
+      "SW",
+      "W",
+      "NW"
+    ],
+    "notes": "NEW. Flat-water / learning spot. CameraFTP thumbnail JPEG verified (~24KB). Also on PredictWind list."
+  },
+  {
+    "id": "lake-pupuke-2",
+    "name": "Lake Pupuke 2",
+    "spot": "Lake Pupuke",
+    "url": "https://www.windsurf.co.nz/windsurf_cam_lake-pupuke2.asp",
+    "imageUrl": "https://4winds.co.nz/live/lakep/lakep2.jpg",
+    "windDirs": [
+      "NE",
+      "E",
+      "SW",
+      "W",
+      "NW"
+    ],
+    "notes": "Page states CAMERA CURRENTLY OFFLINE DUE TO RENOVATIONS. 4winds JPEG last-modified 2026-06-04 \u2014 stale. Do not feature as live."
+  },
+  {
+    "id": "omaha-surfline",
+    "name": "Omaha South (Surfline still)",
+    "spot": "Omaha",
+    "url": "https://www.surfline.com/surf-report/omaha-beach/6178698263e26bab7abf55d9",
+    "imageUrl": "https://camstills.cdn-surfline.com/ap-southeast-2/nz-omahasouth/latest_full.jpg",
+    "windDirs": [
+      "NE",
+      "E",
+      "N"
+    ],
+    "notes": "NEW. East-coast kite/surf further north. Surfline still verified live at audit."
+  },
+  {
+    "id": "narrow-neck-wakatere",
+    "name": "Narrow Neck (Wakatere / PredictWind)",
+    "spot": "Narrow Neck",
+    "url": "https://www.wakatere.org.nz/webcam-and-weather/",
+    "imageUrl": "",
+    "windDirs": [
+      "NE",
+      "E",
+      "N",
+      "SW"
+    ],
+    "notes": "NEW. Club page embeds PredictWind webcam (forecast.predictwind.com/embed/webcam/wakatere-boating-club/). Also listed on Hauraki Gulf Weather. May require PredictWind session for full HD \u2014 mark uncertain for anonymous embed."
+  },
+  {
+    "id": "hauraki-gulf-weather-hub",
+    "name": "Hauraki Gulf Weather live cams hub",
+    "spot": "Auckland / Upper North Island",
+    "url": "https://www.haurakigulfweather.com/live-webcams",
+    "imageUrl": "",
+    "windDirs": [],
+    "notes": "Hub: Viaduct/Harbour Bridge, Narrow Neck, Kohi Yacht Club (PredictWind), plus Coromandel cams. Useful aggregator, not a single spot still."
+  },
+  {
+    "id": "predictwind-nz-hub",
+    "name": "PredictWind NZ webcams hub",
+    "spot": "Auckland / NZ",
+    "url": "https://www.predictwind.com/webcams",
+    "imageUrl": "",
+    "windDirs": [],
+    "notes": "Lists many Auckland kite-relevant cams (Takapuna Boating Club, Orewa Beach, Shoal Bay, Manly SC, Lake Pupuke, Kohimarama, Bayswater, Kariaotahi, etc.). Many exclusive/paid \u2014 use as discovery, not free stills."
+  },
+  {
+    "id": "windfinder-takapuna",
+    "name": "Windfinder webcams near Takapuna",
+    "spot": "Takapuna / North Shore",
+    "url": "https://www.windfinder.com/webcams/takapuna-north-shore",
+    "imageUrl": "https://images.webcamgalore.com/394-current-webcam-Takapuna.jpg",
+    "windDirs": [
+      "NE",
+      "E",
+      "N"
+    ],
+    "notes": "Aggregator linking TakapunaCam + nearby. Good secondary entry."
+  },
+  {
+    "id": "metservice-harbour-bridge",
+    "name": "Auckland Harbour Bridge (MetService station)",
+    "spot": "Waitemata Harbour",
+    "url": "https://www.metservice.com/weather-station-location/93106/auckland-harbour-bridge",
+    "imageUrl": "",
+    "windDirs": [
+      "SW",
+      "W",
+      "NW",
+      "NE",
+      "E"
+    ],
+    "notes": "Wind station (not a camera). HTTP\u2192HTTPS 200. Keep for wind truth alongside cams."
+  },
+  {
+    "id": "metservice-whangaparaoa",
+    "name": "Whangaparaoa Peninsula (MetService station)",
+    "spot": "Whangaparaoa / Shakes",
+    "url": "https://www.metservice.com/weather-station-location/93103/whangaparaoa-peninsula",
+    "imageUrl": "",
+    "windDirs": [
+      "NE",
+      "E",
+      "N",
+      "NW"
+    ],
+    "notes": "Wind station for Shakes / Manly area. HTTP\u2192HTTPS 200."
+  }
+]

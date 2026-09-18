@@ -3,18 +3,73 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Auckland Kite Bot</title>
-
-  <!-- Redirect after 6 seconds -->
-  <meta http-equiv="refresh" content="6;url=REPORT_URL">
+  <title>{{SHARE_TITLE}}</title>
+  <meta name="description" content="{{SHARE_DESCRIPTION}}">
+  <!-- SHARE_META -->
+  <link rel="stylesheet" href="/chrome.css">
+  <link rel="stylesheet" href="/live.css">
 </head>
 <body>
-  <h1>Auckland Kite Bot</h1>
-  <p>
-    The latest report is available here:
-    <a href="https://akb-reports.drim.works/report">View the current report</a> (https://akb-reports.drim.works/report)
-  </p>
+  <header class="chrome">
+    <a class="brand" href="/">KAN · Recreation Assistant</a>
+    <nav>
+      <a href="/">Live / Forecast</a>
+      <a href="/dashboard">Dashboard</a>
+      <a href="/notes">Notes</a>
+      <a href="/join">Join</a>
+      <a href="/portals/instructor">Instructor</a>
+      <a href="/portals/provider">Provider</a>
+      <a href="/portals/sponsor">Sponsor</a>
+    </nav>
+    <a class="tier-chip" id="tier-chip" href="/join">Visitor</a>
+  </header>
 
-  <p>You will be redirected automatically in 6 seconds.</p>
+  <header class="live-header">
+    <h1>Kitesurfing Auckland — live &amp; forecast</h1>
+    <p class="sub">Forecast = KAN report cards (filter by skill). Live = still + Windsurf chart side by side. Click media for source.</p>
+    <div class="controls">
+      <label for="filter">Show</label>
+      <select id="filter">
+        <option value="auto">Auto (match wind)</option>
+        <option value="all">All spots</option>
+      </select>
+      <label for="wind">Wind</label>
+      <select id="wind">
+        <option>N</option><option selected>NE</option><option>E</option><option>SE</option>
+        <option>S</option><option>SW</option><option>W</option><option>NW</option>
+      </select>
+      <div class="chips" id="chips"></div>
+      <button type="button" id="refresh">Refresh</button>
+      <div class="zoom-wrap" title="Image magnification">
+        <label for="zoom">Size</label>
+        <input type="range" id="zoom" min="140" max="420" step="20" value="220">
+        <span class="zoom-val" id="zoomVal">220px</span>
+      </div>
+      <div class="mode-toggle" role="radiogroup" aria-label="Mode">
+        <label><input type="radio" name="view" value="forecast" checked> Forecast</label>
+        <label><input type="radio" name="view" value="live"> Live</label>
+      </div>
+      <div class="skill-toggle" id="skillToggle" role="radiogroup" aria-label="Skill filter">
+        <label><input type="radio" name="skill" value="all" checked> All</label>
+        <label><input type="radio" name="skill" value="beginner"> Beginner</label>
+        <label><input type="radio" name="skill" value="intermediate"> Intermediate</label>
+        <label><input type="radio" name="skill" value="advanced"> Advanced</label>
+      </div>
+    </div>
+  </header>
+
+  <div class="advice-strip" id="advice" hidden></div>
+  <main class="live-main">
+    <p class="meta" id="status">Loading…</p>
+    <p class="skill-key" id="skillKey"></p>
+    <div class="grid" id="grid"></div>
+    <p class="empty" id="empty" hidden>No spots match this filter.</p>
+  </main>
+  <footer class="live-footer">
+    <p id="stations"></p>
+    <p class="proto"><strong>Note:</strong> Data and images on this page are for prototyping purposes only: we'll secure proper subscription access with the content owners once the feature set is bedded down.</p>
+  </footer>
+  <script src="/chrome.js"></script>
+  <script src="/live.js"></script>
 </body>
 </html>

@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Instructor portal — KAN</title>
+  <meta name="description" content="Instructor portal stub for the kitesurfing Recreation Assistant.">
+  <link rel="stylesheet" href="/chrome.css">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/pages.css">
+</head>
+<body>
+  <header class="chrome">
+    <a class="brand" href="/">KAN · Recreation Assistant</a>
+    <nav>
+      <a href="/">Live / Forecast</a>
+      <a href="/dashboard">Dashboard</a>
+      <a href="/notes">Notes</a>
+      <a href="/join">Join</a>
+      <a href="/portals/instructor">Instructor</a>
+      <a href="/portals/provider">Provider</a>
+      <a href="/portals/sponsor">Sponsor</a>
+    </nav>
+    <a class="tier-chip" id="tier-chip" href="/join">Visitor</a>
+  </header>
+  <div class="page-shell">
+    <div class="lock-banner" id="lock" hidden></div>
+    <p class="eyebrow">Portal</p>
+    <h1>Instructor</h1>
+    <p>Role dashboard for coaches. Free members can preview; production will gate with Clerk roles.</p>
+    <section class="grid">
+      <article class="panel">
+        <h2>Today's students</h2>
+        <p class="muted">Stub roster. Skill circles (not letters) will sit beside each name.</p>
+        <ul class="list">
+          <li>Alex — Beginner · Intermediate · Advanced <span class="sk-circles"><span class="sk-circle green"></span><span class="sk-circle blue"></span><span class="sk-circle white"></span></span></li>
+          <li>Sam — first session at Takapuna (new to this spot)</li>
+        </ul>
+      </article>
+      <article class="panel">
+        <h2>Video analysis intake</h2>
+        <p class="muted">Upcoming: remote / virtual kite instructors and clip review. Capture lives in the roadmap.</p>
+        <form class="stack">
+          <input placeholder="Student name" disabled>
+          <textarea placeholder="Link or notes for a later upload" disabled></textarea>
+          <button type="button" disabled>Submit (coming)</button>
+        </form>
+      </article>
+    </section>
+  </div>
+  <script src="/chrome.js"></script>
+  <script src="/portal.js" data-portal="instructor"></script>
+</body>
+</html>
