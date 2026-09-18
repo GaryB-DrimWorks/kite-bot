@@ -3,11 +3,15 @@ import path from "node:path";
 import { config } from "../config/index.js";
 
 async function ensureDir() {
-  await mkdir(config.dataPath, { recursive: true });
+  await mkdir(dataDir(), { recursive: true });
+}
+
+function dataDir() {
+  return process.env.DATA_PATH || config.dataPath || "data";
 }
 
 function fileFor(name) {
-  return path.join(config.dataPath, `${name}.json`);
+  return path.join(dataDir(), `${name}.json`);
 }
 
 async function readJson(name, fallback) {
@@ -42,6 +46,28 @@ export async function addRecord(name, record) {
   const next = [withId(record), ...rows].slice(0, 400);
   await writeJson(name, next);
   return next[0];
+}
+
+export async function getRecord(name, id) {
+  const rows = await listRecords(name);
+  return rows.find((row) => row.id === id) || null;
+}
+
+export async function updateRecord(name, id, patch) {
+  const rows = await listRecords(name);
+  const index = rows.findIndex((row) => row.id === id);
+  if (index === -1) return null;
+  const current = rows[index];
+  const next = {
+    ...current,
+    ...patch,
+    id: current.id,
+    createdAt: current.createdAt,
+    updatedAt: new Date().toISOString()
+  };
+  rows[index] = next;
+  await writeJson(name, rows);
+  return next;
 }
 
 export async function listVisible(name, groupId) {

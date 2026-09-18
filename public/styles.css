@@ -21,6 +21,10 @@ html, body {
 }
 
 body {
+  margin: 0;
+}
+
+.page-shell {
   max-width: 1180px;
   margin: 0 auto;
   padding: 1.25rem 1rem 3rem;

@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Notes &amp; advice — KAN</title>
+  <meta name="description" content="Create and edit general and spot-specific kite notes tagged by skill and new-to-spot.">
+  <link rel="stylesheet" href="/chrome.css">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/pages.css">
+</head>
+<body>
+  <header class="chrome">
+    <a class="brand" href="/">KAN · Recreation Assistant</a>
+    <nav>
+      <a href="/">Live / Forecast</a>
+      <a href="/dashboard">Dashboard</a>
+      <a href="/notes">Notes</a>
+      <a href="/join">Join</a>
+      <a href="/portals/instructor">Instructor</a>
+      <a href="/portals/provider">Provider</a>
+      <a href="/portals/sponsor">Sponsor</a>
+    </nav>
+    <a class="tier-chip" id="tier-chip" href="/join">Visitor</a>
+  </header>
+  <div class="page-shell">
+    <p class="eyebrow">Admin-friendly capture</p>
+    <h1>Notes &amp; advice</h1>
+    <p class="muted">Tag audience as Beginner, Intermediate, Advanced/Expert, and New to this spot. Filters match the Live/Forecast skill toggle.</p>
+
+    <form class="filters-lite" id="note-filters">
+      <label>Spot
+        <select name="spot" id="filter-spot">
+          <option value="">All spots + general</option>
+        </select>
+      </label>
+      <label>Skill
+        <select name="skill" id="filter-skill">
+          <option value="all">All</option>
+          <option value="beginner">Beginner</option>
+          <option value="intermediate">Intermediate</option>
+          <option value="advanced">Advanced</option>
+        </select>
+      </label>
+      <label class="check"><input type="checkbox" name="newToSpot" id="filter-new"> New to this spot only</label>
+      <button type="submit">Filter</button>
+    </form>
+
+    <section class="grid">
+      <article class="panel">
+        <h2 id="form-title">New note</h2>
+        <form id="note-form" class="stack">
+          <input type="hidden" name="id" id="note-id">
+          <label>Kind
+            <select name="kind" id="note-kind">
+              <option value="general">General notes/advice</option>
+              <option value="spot">Spot-specific notes/advice</option>
+            </select>
+          </label>
+          <label>Type
+            <select name="type">
+              <option value="advice">Advice</option>
+              <option value="note">Note</option>
+            </select>
+          </label>
+          <label>Spot
+            <select name="spotId" id="note-spot"></select>
+          </label>
+          <input name="title" required maxlength="120" placeholder="Title">
+          <textarea name="body" required maxlength="4000" placeholder="Launch notes, tide quirks, who this is for…"></textarea>
+          <fieldset class="audience">
+            <legend>Audience</legend>
+            <label class="check"><input type="checkbox" name="audience" value="beginner"> Beginner</label>
+            <label class="check"><input type="checkbox" name="audience" value="intermediate"> Intermediate</label>
+            <label class="check"><input type="checkbox" name="audience" value="advanced"> Advanced/Expert</label>
+            <label class="check"><input type="checkbox" name="audience" value="new-to-spot"> New to this spot</label>
+          </fieldset>
+          <input name="author" maxlength="40" placeholder="Author">
+          <div class="row-actions">
+            <button type="submit">Save</button>
+            <button type="button" id="note-reset" class="ghost">Clear</button>
+          </div>
+          <p class="muted" id="note-status"></p>
+        </form>
+      </article>
+      <article class="panel">
+        <h2>Saved notes</h2>
+        <div id="note-list" class="list"></div>
+      </article>
+    </section>
+  </div>
+  <script src="/chrome.js"></script>
+  <script src="/notes.js"></script>
+</body>
+</html>

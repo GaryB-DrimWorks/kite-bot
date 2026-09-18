@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Join KAN — Recreation Assistant</title>
+  <meta name="description" content="Visitor, returning visitor, free member, and paid individual or group plans for the kitesurfing Recreation Assistant.">
+  <link rel="stylesheet" href="/chrome.css">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/pages.css">
+</head>
+<body>
+  <header class="chrome">
+    <a class="brand" href="/">KAN · Recreation Assistant</a>
+    <nav>
+      <a href="/">Live / Forecast</a>
+      <a href="/dashboard">Dashboard</a>
+      <a href="/notes">Notes</a>
+      <a href="/join">Join</a>
+      <a href="/portals/instructor">Instructor</a>
+      <a href="/portals/provider">Provider</a>
+      <a href="/portals/sponsor">Sponsor</a>
+    </nav>
+    <a class="tier-chip" id="tier-chip" href="/join">Visitor</a>
+  </header>
+  <div class="page-shell">
+    <p class="eyebrow">Freemium · CYOS ready</p>
+    <h1>Membership</h1>
+    <p class="muted">Tiers: Visitor · Returning Visitor · Free Member · Paid Individual · Paid Group. Identity will use Clerk when <code>CLERK_*</code> is set; paid checkout uses Stripe when <code>STRIPE_*</code> is set. Local stubs work without keys.</p>
+
+    <section class="grid">
+      <article class="panel">
+        <h2>You</h2>
+        <p id="me-status">Checking visitor cookie…</p>
+        <form id="signup-form" class="stack">
+          <input name="name" maxlength="80" placeholder="Name">
+          <input name="email" type="email" required placeholder="Email">
+          <button type="submit">Become a Free Member</button>
+        </form>
+        <p class="muted" id="signup-status"></p>
+      </article>
+      <article class="panel">
+        <h2>Paid plans</h2>
+        <p class="stub-note" id="stripe-status"></p>
+        <div id="plans" class="stack"></div>
+      </article>
+    </section>
+
+    <h2>Tiers</h2>
+    <div class="tier-grid" id="tiers"></div>
+    <h2>Portals</h2>
+    <div class="portal-grid" id="portals"></div>
+  </div>
+  <script src="/chrome.js"></script>
+  <script src="/join.js"></script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Weather provider portal — KAN</title>
+  <meta name="description" content="CYOS / partner weather provider portal stub.">
+  <link rel="stylesheet" href="/chrome.css">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/pages.css">
+</head>
+<body>
+  <header class="chrome">
+    <a class="brand" href="/">KAN · Recreation Assistant</a>
+    <nav>
+      <a href="/">Live / Forecast</a>
+      <a href="/dashboard">Dashboard</a>
+      <a href="/notes">Notes</a>
+      <a href="/join">Join</a>
+      <a href="/portals/instructor">Instructor</a>
+      <a href="/portals/provider">Provider</a>
+      <a href="/portals/sponsor">Sponsor</a>
+    </nav>
+    <a class="tier-chip" id="tier-chip" href="/join">Visitor</a>
+  </header>
+  <div class="page-shell">
+    <div class="lock-banner" id="lock" hidden></div>
+    <p class="eyebrow">Portal · CYOS</p>
+    <h1>Live / forecast weather provider</h1>
+    <p>Partner and Connect-Your-Own-Subscription (CYOS) feeds. Paid individual is the intended floor; this page is visible as a stub.</p>
+    <section class="grid">
+      <article class="panel">
+        <h2>Connected sources</h2>
+        <ul class="list">
+          <li>Open-Meteo — included (platform)</li>
+          <li>Windsurf.co.nz stills/charts — attribution + click-through</li>
+          <li>PredictWind / SailFlow / Windy — CYOS slots (not wired)</li>
+        </ul>
+      </article>
+      <article class="panel">
+        <h2>Referral clip ticket</h2>
+        <p class="muted">Commission on referred provider subscriptions. Configure after Clerk + Stripe live keys exist.</p>
+        <form class="stack">
+          <input placeholder="Provider API token (CYOS)" disabled>
+          <button type="button" disabled>Save CYOS (coming)</button>
+        </form>
+      </article>
+    </section>
+  </div>
+  <script src="/chrome.js"></script>
+  <script src="/portal.js" data-portal="provider"></script>
+</body>
+</html>

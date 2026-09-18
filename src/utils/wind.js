@@ -10,6 +10,28 @@ export function msToKnots(ms) {
   return ms * 1.94384;
 }
 
+export function sector8(deg) {
+  const dirs = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
+  const index = Math.round((((Number(deg) % 360) + 360) % 360) / 45) % 8;
+  return dirs[index];
+}
+
+export function toEightPoint(cardinal) {
+  const value = String(cardinal || "").toUpperCase();
+  if (["N", "NE", "E", "SE", "S", "SW", "W", "NW"].includes(value)) return value;
+  const map = {
+    NNE: "NE",
+    ENE: "E",
+    ESE: "E",
+    SSE: "SE",
+    SSW: "SW",
+    WSW: "W",
+    WNW: "W",
+    NNW: "N"
+  };
+  return map[value] || value;
+}
+
 export function directionToCardinal(deg) {
   const dirs = [
     "N",

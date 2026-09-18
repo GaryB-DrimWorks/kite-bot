@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Auckland Kite Support — dashboard</title>
+  <meta name="description" content="Ranked Auckland kite spots, safety, and KAN-style daily forecast.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/chrome.css">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="chrome">
+    <a class="brand" href="/">KAN · Recreation Assistant</a>
+    <nav>
+      <a href="/">Live / Forecast</a>
+      <a href="/dashboard">Dashboard</a>
+      <a href="/notes">Notes</a>
+      <a href="/join">Join</a>
+      <a href="/portals/instructor">Instructor</a>
+      <a href="/portals/provider">Provider</a>
+      <a href="/portals/sponsor">Sponsor</a>
+    </nav>
+    <a class="tier-chip" id="tier-chip" href="/join">Visitor</a>
+  </header>
+  <div class="page-shell">
+  <header class="top">
+    <div>
+      <p class="eyebrow">Auckland Kite Support</p>
+      <h1>Where to ride, and whether you should</h1>
+    </div>
+    <div class="now" id="now-card">Loading conditions…</div>
+  </header>
+
+  <form class="controls" id="filters">
+    <label>Discipline
+      <select name="discipline" id="discipline"></select>
+    </label>
+    <label>Profile
+      <select name="profile" id="profile"></select>
+    </label>
+    <label>Spot
+      <select name="spot" id="spot"><option value="">Best match</option></select>
+    </label>
+    <label>Hours free
+      <input name="hours" id="hours" type="number" min="1" max="12" step="0.5" placeholder="e.g. 3">
+    </label>
+    <label>Wind min (kn)
+      <input name="windMin" id="windMin" type="number" min="0" max="50">
+    </label>
+    <label>Wind max (kn)
+      <input name="windMax" id="windMax" type="number" min="0" max="50">
+    </label>
+    <label>Future slot
+      <input name="time" id="time" type="datetime-local">
+    </label>
+    <label>Group
+      <input name="group" id="group" type="text" placeholder="in-group id" autocomplete="off">
+    </label>
+    <button type="submit">Update view</button>
+  </form>
+
+  <nav class="modes" id="modes"></nav>
+
+  <main>
+    <section class="grid">
+      <article class="panel" id="forecast-panel">
+        <h2>Daily forecast</h2>
+        <pre id="forecast"></pre>
+      </article>
+      <article class="panel">
+        <h2>Ranked spots</h2>
+        <div id="spots" class="spots"></div>
+      </article>
+    </section>
+
+    <section class="grid three" data-show="ride,safety,coach,virtual">
+      <article class="panel">
+        <h2>Focused spot</h2>
+        <div id="focus"></div>
+      </article>
+      <article class="panel">
+        <h2>Safety</h2>
+        <div id="safety"></div>
+      </article>
+      <article class="panel">
+        <h2>Good windows</h2>
+        <div id="windows"></div>
+      </article>
+    </section>
+
+    <section class="grid" data-show="ride,coach,manager">
+      <article class="panel">
+        <h2>Report conditions to your group</h2>
+        <form id="report-form" class="stack">
+          <input name="summary" required maxlength="500" placeholder="Orewa is on, 16 kn E, a bit gusty">
+          <input name="author" maxlength="40" placeholder="Your name">
+          <label class="check"><input type="checkbox" name="groupOnly"> In-group only</label>
+          <button type="submit">Share report</button>
+        </form>
+        <ul id="reports" class="list"></ul>
+      </article>
+      <article class="panel">
+        <h2>Lost gear</h2>
+        <form id="gear-form" class="stack">
+          <input name="item" required maxlength="120" placeholder="Red 9m, black bar">
+          <input name="notes" maxlength="500" placeholder="Last seen drifting north of the flags">
+          <label class="check"><input type="checkbox" name="groupOnly"> In-group only</label>
+          <button type="submit">Log it</button>
+        </form>
+        <div id="gear-advice" class="muted"></div>
+        <ul id="gear" class="list"></ul>
+      </article>
+    </section>
+
+    <section class="grid" data-show="ride,repairs,coach,manager">
+      <article class="panel">
+        <h2>Add knowledge</h2>
+        <form id="knowledge-form" class="stack">
+          <input name="title" required maxlength="120" placeholder="Title">
+          <select name="topic">
+            <option value="spot">Spot advice</option>
+            <option value="safety">Safety</option>
+            <option value="repairs">Repairs</option>
+            <option value="coach">Coach</option>
+            <option value="rnd">R&amp;D</option>
+          </select>
+          <textarea name="body" required maxlength="4000" placeholder="Launch notes, tide quirks, repair steps…"></textarea>
+          <label class="check"><input type="checkbox" name="groupOnly"> In-group only</label>
+          <button type="submit">Save to the bot</button>
+        </form>
+      </article>
+      <article class="panel">
+        <h2>Knowledge base</h2>
+        <div id="knowledge" class="list"></div>
+      </article>
+    </section>
+
+    <section class="grid" data-show="virtual">
+      <article class="panel wide">
+        <h2>Virtual planner</h2>
+        <p class="muted">Set a future slot and hours free above. Rankings re-score that hour, including travel time.</p>
+        <div id="virtual"></div>
+      </article>
+    </section>
+
+    <section class="grid" data-show="rnd">
+      <article class="panel">
+        <h2>Forecast reliability</h2>
+        <div id="rnd"></div>
+      </article>
+      <article class="panel">
+        <h2>Atmosphere</h2>
+        <div id="atmosphere"></div>
+      </article>
+    </section>
+
+    <section class="grid" data-show="manager">
+      <article class="panel">
+        <h2>Sponsor group</h2>
+        <form id="sponsor-form" class="stack">
+          <input name="name" required placeholder="Shop or club name">
+          <input name="discount" placeholder="15% on weekday lessons">
+          <button type="submit">Add sponsor</button>
+        </form>
+        <ul id="sponsors" class="list"></ul>
+      </article>
+      <article class="panel">
+        <h2>Bring your own spot</h2>
+        <form id="spot-form" class="stack">
+          <input name="name" required placeholder="Spot name">
+          <input name="lat" required placeholder="Latitude">
+          <input name="lon" required placeholder="Longitude">
+          <select name="coast">
+            <option value="east">East</option>
+            <option value="west">West</option>
+            <option value="harbour">Harbour</option>
+          </select>
+          <button type="submit">Add spot</button>
+        </form>
+      </article>
+    </section>
+
+    <section class="grid" data-show="manager,ride">
+      <article class="panel">
+        <h2>BYOK</h2>
+        <p class="muted">Optional NIWA tide key for official Waitemata tides. Stormglass is stored for later marine use. Keys never come back in the API.</p>
+        <form id="keys-form" class="stack">
+          <input name="niwaTideApiKey" type="password" placeholder="NIWA tide API key">
+          <input name="stormglassApiKey" type="password" placeholder="Stormglass key">
+          <button type="submit">Save keys</button>
+        </form>
+        <p id="keys-status" class="muted"></p>
+      </article>
+      <article class="panel">
+        <h2>Meta layer</h2>
+        <p>Other apps can pull the same view as JSON:</p>
+        <p><code>/api/overview</code> · <code>/report</code> · <code>/api/forecast/daily</code> · <code>/api/live-forecast</code></p>
+        <p class="muted">WhatsApp bot commands: !wind, !forecast, !spots — teasers will deep-link here.</p>
+      </article>
+    </section>
+  </main>
+
+  <footer>
+    Beach check still wins. Estimated tides are labelled. Offshore is always a no-go.
+  </footer>
+  </div>
+  <script src="/chrome.js"></script>
+  <script src="/app.js"></script>
+</body>
+</html>
