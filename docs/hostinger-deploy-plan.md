@@ -1,6 +1,6 @@
 # Hostinger deploy plan — kite-bot.drim.works
 
-**Status:** GitHub ready (`main` @ `0bcef38`, PR #2, 2026-09-18). SSH cutover is **not done** — Cursor Cloud has no deploy key for this VPS.  
+**Status:** Cutover **complete** (2026-09-18). Live at https://kite-bot.drim.works — app `main` @ `de4f3bf`, TLS via Let’s Encrypt, `WHATSAPP_DISABLED=1`.  
 **VPS:** Hostinger KVM `1801176` (`srv1801176.hstgr.cloud` / `2.25.77.2`)  
 **App path on VPS:** `/opt/auckland-kite-bot/`  
 **Public URL:** https://kite-bot.drim.works  
@@ -8,29 +8,29 @@
 
 This plan deploys the **web app first** (cameras Live|Forecast, notes, membership stubs). Keep WhatsApp on the Grok Bot / KAN Bot bridge for now — do **not** re-enable Baileys on the VPS until a dedicated number is ready.
 
-### Live recon (2026-09-18, from Cursor Cloud)
+### Live state (2026-09-18, after cutover)
 
 | Check | Result |
 |-------|--------|
-| `dig kite-bot.drim.works` | **NXDOMAIN** (no A/CNAME). Apex `drim.works` → `2.25.77.2` |
-| SSH `:22` | Open; `publickey,password`. This agent: **permission denied** (no key) |
-| `:3000` from the internet | Closed (compose should bind localhost only) |
-| nginx | `1.24.0` Ubuntu. HTTP `Host: kite-bot.drim.works` → **404** (no vhost) |
-| Default HTTPS | `ai-dictionary.drim.works` (“Catch the AI Wave”). Leave that vhost as `default_server` |
+| DNS A `kite-bot` → `2.25.77.2` | ✅ (may lag on some resolvers; Google `8.8.8.8` is fine) |
+| SSH | ✅ Cursor Cloud deploy key as `root` |
+| App container | ✅ `auckland-kite-bot` on `127.0.0.1:3000`, health OK, WhatsApp disabled |
+| Postgres orphan | Left running unused (`auckland-kite-postgres`); safe to stop later |
+| nginx vhost | ✅ `kite-bot.drim.works` → `:3000` (IPv4-only `listen 80` — avoid `[::]:80` bind failures on reload) |
+| TLS | ✅ Let’s Encrypt; HTTP→HTTPS; ACME webroot at `/var/www/html` |
+| Sibling sites | `akb-reports` / `ai-dictionary` still 200 |
 
-The historical **HTTP 500** on the hostname is stale. Public failure mode today is **DNS missing** plus **no kite-bot vhost**. Do not point a new vhost at the AI Dictionary root.
-
-On the VPS, run `sudo bash /opt/auckland-kite-bot/app/scripts/hostinger-cutover.sh` (add `--nginx` to drop in the vhost). Or paste this file into Hostinger’s agent.
+Refresh deploy: `cd /opt/auckland-kite-bot && bash app/scripts/hostinger-cutover.sh` (omit `--nginx` once the vhost exists).
 
 ---
 
 ## 0. Preconditions
 
-- [ ] SSH access to KVM `1801176` as the usual deploy user (`root@2.25.77.2` or `root@srv1801176.hstgr.cloud`)
-- [ ] Hostinger DNS **A** record `kite-bot` → `2.25.77.2` (currently NXDOMAIN; NS is Hostinger `dns-parking.com`)
-- [ ] Reverse proxy (nginx) vhost `kite-bot.drim.works` → `127.0.0.1:3000` (not the default AI Dictionary site)
-- [ ] Docker + Docker Compose installed on the VPS
-- [x] GitHub `main` includes the Live\|Forecast dashboard (PR #1) and app-only compose (PR #2)
+- [x] SSH access to KVM `1801176` as the usual deploy user (`root@2.25.77.2` or `root@srv1801176.hstgr.cloud`)
+- [x] Hostinger DNS **A** record `kite-bot` → `2.25.77.2`
+- [x] Reverse proxy (nginx) vhost `kite-bot.drim.works` → `127.0.0.1:3000` (not the default AI Dictionary site)
+- [x] Docker + Docker Compose installed on the VPS
+- [x] GitHub `main` includes the Live\|Forecast dashboard (PR #1), app-only compose (PR #2), and cutover runbook (PR #3)
 
 ---
 
@@ -176,46 +176,33 @@ Expect `/health` JSON OK and `/` → `200`.
 
 ---
 
-## 6. DNS + reverse proxy (fix NXDOMAIN / 404 / old 500)
+## 6. DNS + reverse proxy
 
-`kite-bot.drim.works` is **NXDOMAIN** as of 2026-09-18. Earlier reports of HTTP **500** were proxy/upstream misconfig; today there is no vhost at all (HTTP Host header → nginx 404). The default TLS cert is `ai-dictionary.drim.works` only.
+DNS A `kite-bot` → `2.25.77.2` and TLS are in place (2026-09-18 cutover). Keep this section for rebuilds.
 
 Checklist:
 
-1. Hostinger hPanel → DNS for `drim.works`: **A** `kite-bot` → `2.25.77.2` (TTL 300). Wait until `dig +short kite-bot.drim.works` returns that IP.
+1. Hostinger hPanel → DNS for `drim.works`: **A** `kite-bot` → `2.25.77.2` (TTL 300). Confirm with `dig +short kite-bot.drim.works @8.8.8.8`.
 2. Vhost `server_name` = `kite-bot.drim.works` (do **not** set `default_server`)
 3. Upstream = `http://127.0.0.1:3000` (not the AI Dictionary root or a dead container)
 4. Proxy headers: `Host`, `X-Forwarded-For`, `X-Forwarded-Proto $scheme`
-5. TLS cert for this hostname (`certbot --nginx -d kite-bot.drim.works`)
-6. After compose + DNS + cert: `curl -sS -o /dev/null -w "%{http_code}\n" https://kite-bot.drim.works/health` → `200`
+5. TLS via webroot (more reliable here than `certbot --nginx` alone):  
+   `certbot certonly --webroot -w /var/www/html -d kite-bot.drim.works`
+6. Prefer **`systemctl restart nginx`** after vhost changes — on this host, `reload` can fail on `listen [::]:80` and leave stale workers
+7. Smoke: `curl -sS https://kite-bot.drim.works/health` → `200`
 
-If still failing: `dig`, proxy error log, `docker compose logs --tail=100 auckland-kite-bot`, and `ss -lntp | grep 3000` (should be `127.0.0.1:3000` only).
+If still failing: `dig @8.8.8.8`, proxy error log, `docker compose logs --tail=100 auckland-kite-bot`, and `ss -lntp | grep 3000` (should be `127.0.0.1:3000` only).
 
-Drop-in file: `deploy/hostinger/nginx-kite-bot.drim.works.conf`
-
-```nginx
-server {
-    listen 80;
-    listen [::]:80;
-    server_name kite-bot.drim.works;
-
-    location / {
-        proxy_pass http://127.0.0.1:3000;
-        proxy_http_version 1.1;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
-}
-```
+Drop-in file: `deploy/hostinger/nginx-kite-bot.drim.works.conf` (IPv4-only + ACME webroot location).
 
 ```bash
 sudo cp /opt/auckland-kite-bot/app/deploy/hostinger/nginx-kite-bot.drim.works.conf \
   /etc/nginx/sites-available/kite-bot.drim.works
 sudo ln -sfn /etc/nginx/sites-available/kite-bot.drim.works /etc/nginx/sites-enabled/
-sudo nginx -t && sudo systemctl reload nginx
-sudo certbot --nginx -d kite-bot.drim.works
+sudo nginx -t && sudo systemctl restart nginx
+sudo mkdir -p /var/www/html
+sudo certbot certonly --webroot -w /var/www/html -d kite-bot.drim.works
+# then configure the 443 server block (or certbot install) and keep ACME on :80
 ```
 
 ---
@@ -269,7 +256,7 @@ docker compose up -d
 curl -sS https://kite-bot.drim.works/health
 ```
 
-Optional later: GitHub Action → SSH deploy on `main` push (not required for first cutover). Needs a deploy key in GitHub Secrets plus the same key on the VPS — this Cursor Cloud environment does not have that key today.
+Optional later: GitHub Action → SSH deploy on `main` push (not required). Cursor Cloud already has `HOSTINGER_SSH_*` secrets for this VPS.
 
 ---
 
@@ -280,18 +267,16 @@ Optional later: GitHub Action → SSH deploy on `main` push (not required for fi
 3. Session-call teasers → deep links after cameras feel solid (`docs/session-call-teaser-roadmap.md`).
 4. Reconcile Hostinger Ideal/OK/Sketchy bands vs skill-circle fills (`docs/hostinger-mvp-prompt.md` vs `docs/skill-icons.md`).
 5. Dedicated WhatsApp number / VPS Baileys only when Grok Bot bridge is no longer the production path.
-6. Add a VPS deploy key to Cursor Cloud / GitHub Actions if you want agents to finish SSH cutovers.
+6. Add a VPS deploy key to GitHub Actions if you want CI auto-deploy (Cursor Cloud SSH already works).
+7. Stop unused `auckland-kite-postgres` after confirming JSON `DATA_PATH` is enough.
 
 ---
 
 ## 11. Quick owner checklist
 
-1. Merge done ✅ (PR #1 dashboard, PR #2 compose → `main` @ `0bcef38`)
-2. Hostinger DNS: A `kite-bot` → `2.25.77.2` until `dig` resolves
-3. SSH → `scripts/hostinger-cutover.sh` (or pull `main` into `/opt/auckland-kite-bot/app` by hand)
-4. Set `.env` with `WHATSAPP_DISABLED=1` + `PUBLIC_ORIGIN`
-5. `docker compose build && up -d` — smoke `http://127.0.0.1:3000/health`
-6. Enable nginx vhost + certbot (do not steal `ai-dictionary` default)
-7. Click through Live / Forecast / Notes / Join once
-
-To finish from Cursor Cloud, add an SSH public key for `root@srv1801176.hstgr.cloud` (or a deploy user) to this environment and say **proceed** again. Until then, run §5 on the VPS or hand Hostinger’s agent this file + `hostinger-mvp-prompt.md`.
+1. Merge done ✅ (PR #1–#3 → `main` @ `de4f3bf`)
+2. Hostinger DNS: A `kite-bot` → `2.25.77.2` ✅
+3. SSH cutover on VPS ✅ (`WHATSAPP_DISABLED=1`, `PUBLIC_ORIGIN=https://kite-bot.drim.works`)
+4. nginx + Let’s Encrypt ✅
+5. Smoke ✅ — https://kite-bot.drim.works/health → 200; Live / Forecast / Notes / Join load
+6. Sibling sites unchanged ✅ (`akb-reports`, `ai-dictionary`)

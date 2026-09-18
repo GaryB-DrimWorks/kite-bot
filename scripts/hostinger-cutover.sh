@@ -86,15 +86,20 @@ if [ "$ENABLE_NGINX" -eq 1 ]; then
     ln -sfn /etc/nginx/sites-available/kite-bot.drim.works \
       /etc/nginx/sites-enabled/kite-bot.drim.works
     nginx -t
-    systemctl reload nginx
-    echo "nginx vhost enabled. After DNS exists: certbot --nginx -d kite-bot.drim.works"
+    # Prefer restart: reload can leave stale workers if a listen bind fails.
+    systemctl restart nginx
+    echo "nginx vhost enabled. After DNS exists:"
+    echo "  mkdir -p /var/www/html"
+    echo "  certbot certonly --webroot -w /var/www/html -d kite-bot.drim.works"
+    echo "  certbot install --cert-name kite-bot.drim.works --nginx --redirect"
+    echo "  # then restore ACME location on :80 if certbot stripped it; restart nginx"
   fi
 fi
 
 cat <<'EOF'
 
-Next (cannot be done from this script):
+Post-cutover checks:
   1. Hostinger DNS: A record kite-bot -> 2.25.77.2
-  2. TLS: certbot --nginx -d kite-bot.drim.works
+  2. TLS (webroot): certbot certonly --webroot -w /var/www/html -d kite-bot.drim.works
   3. curl -sS https://kite-bot.drim.works/health
 EOF
