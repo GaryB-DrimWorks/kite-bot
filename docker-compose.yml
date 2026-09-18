@@ -1,0 +1,19 @@
+# App-only compose at the GitHub repo root (Dockerfile WORKDIR /app, copies src + public).
+# On the VPS parent layout (/opt/auckland-kite-bot/), use context: ./app — see docs/hostinger-deploy-plan.md §3.
+services:
+  auckland-kite-bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: auckland-kite-bot
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "127.0.0.1:3000:3000"
+    volumes:
+      - ./data/app:/app/data
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
