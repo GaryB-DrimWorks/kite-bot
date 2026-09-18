@@ -69,6 +69,7 @@ Without `WHATSAPP_DISABLED`, `npm start` pairs Baileys and handles `!wind`, `!fo
 
 ## Docs
 
+- `docs/hostinger-deploy-plan.md` — Hostinger / [kite-bot.drim.works](https://kite-bot.drim.works) deploy
 - `docs/recreation-assistant-roadmap.md` — upcoming product slice
 - `docs/recreation-assistant-vision.md` — portfolio / CYOS / freemium
 - `docs/skill-icons.md` — ⚪🔵🟢🟠🔴 circles (no B/I/A letters)
