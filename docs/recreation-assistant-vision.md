@@ -69,3 +69,4 @@ Work requested:
 | Spots | Full Auckland + cameras | Hostinger 8 + Bridge; PR spot set; local `spots/auckland/` |
 | Channels | Web + Agent + Bot first | KAN Bot WA; Support agent; PR dashboard |
 | Presentation | Configurable like Churcaster/KiteOn/PredictWind/etc. | Single dashboard UI so far |
+| Hosting | One backend per app unless forced; OSS users choose platform | VPS/Docker primary — see `docs/platform-portability.md` |
