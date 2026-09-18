@@ -110,7 +110,10 @@ export async function getNote(id) {
 
 export async function seedNotes() {
   const existing = await listRecords("notes");
-  if (existing.length) return;
+  if (existing.length) {
+    await fixPointChevOutgoingDirection(existing);
+    return;
+  }
   const starter = [
     {
       kind: "general",
@@ -133,7 +136,7 @@ export async function seedNotes() {
       kind: "spot",
       type: "advice",
       title: "Point Chev is incoming-to-high only",
-      body: "Meola / Point Chevalier is a harbour classroom on the incoming tide. The outgoing Waitemata will take you west. Confirm an official tide, not a phone guess.",
+      body: "Meola / Point Chevalier is a harbour classroom on the incoming tide. The outgoing Waitemata will take you east. Confirm an official tide, not a phone guess.",
       spotId: "point-chev",
       audience: ["beginner", "intermediate", "new-to-spot"],
       author: "KAN"
@@ -150,5 +153,15 @@ export async function seedNotes() {
   ];
   for (const item of starter) {
     await createNote(item);
+  }
+}
+
+async function fixPointChevOutgoingDirection(existing) {
+  for (const note of existing) {
+    if (note.spotId !== "point-chev" || typeof note.body !== "string") continue;
+    if (!/take you west/i.test(note.body)) continue;
+    await updateRecord("notes", note.id, {
+      body: note.body.replace(/take you west/gi, "take you east")
+    });
   }
 }

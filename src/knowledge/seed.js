@@ -16,7 +16,7 @@ const STARTER = [
     title: "Harbour tide rule",
     topic: "safety",
     spotId: "point-chev",
-    body: "Meola / Point Chev is incoming-to-high only. The outgoing Waitemata will take you toward the bridge. Confirm an official tide, not a phone guess."
+    body: "Meola / Point Chev is incoming-to-high only. The outgoing Waitemata will take you east (toward the harbour entrance). Confirm an official tide, not a phone guess."
   },
   {
     title: "Bladder puncture on the beach",
