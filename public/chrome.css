@@ -5,6 +5,59 @@
   --chrome-line: #243552;
   --chrome-accent: #3ecf8e;
   --chrome-link: #8ec8ff;
+  --chrome-chip-bg: #1e3a2f;
+}
+
+html[data-theme="light"] {
+  --chrome-bg: #f4f7fb;
+  --chrome-text: #142033;
+  --chrome-muted: #5a6f88;
+  --chrome-line: #c9d7e8;
+  --chrome-accent: #0f8a5f;
+  --chrome-link: #1a66b8;
+  --chrome-chip-bg: #d8f3e6;
+}
+
+html[data-scheme="sand"] {
+  --chrome-accent: #e0a45a;
+  --chrome-link: #f0c98a;
+}
+html[data-theme="light"][data-scheme="sand"] {
+  --chrome-bg: #f7f1e8;
+  --chrome-text: #2a2118;
+  --chrome-muted: #7a6550;
+  --chrome-line: #e0d2bf;
+  --chrome-accent: #b56b2a;
+  --chrome-link: #8a5520;
+  --chrome-chip-bg: #f3e0c4;
+}
+
+html[data-scheme="forest"] {
+  --chrome-accent: #5dce8a;
+  --chrome-link: #9ad4b0;
+}
+html[data-theme="light"][data-scheme="forest"] {
+  --chrome-bg: #eef6f0;
+  --chrome-text: #14241a;
+  --chrome-muted: #567263;
+  --chrome-line: #c5d9cc;
+  --chrome-accent: #1f7a48;
+  --chrome-link: #1f6b45;
+  --chrome-chip-bg: #d5efe0;
+}
+
+html[data-scheme="slate"] {
+  --chrome-accent: #7aa2ff;
+  --chrome-link: #a8c4ff;
+}
+html[data-theme="light"][data-scheme="slate"] {
+  --chrome-bg: #eef0f4;
+  --chrome-text: #1a1e28;
+  --chrome-muted: #5c6575;
+  --chrome-line: #cfd5e0;
+  --chrome-accent: #3a5fc8;
+  --chrome-link: #2f56b0;
+  --chrome-chip-bg: #dde6ff;
 }
 
 .chrome {
@@ -45,13 +98,37 @@
   font-weight: 600;
 }
 
+.chrome-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem 0.65rem;
+  align-items: center;
+}
+
+.theme-ctrl {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.72rem;
+  color: var(--chrome-muted);
+}
+
+.theme-ctrl select {
+  background: var(--chrome-bg);
+  color: var(--chrome-text);
+  border: 1px solid var(--chrome-line);
+  border-radius: 6px;
+  padding: 0.2rem 0.35rem;
+  font: inherit;
+}
+
 .tier-chip {
   font-size: 0.78rem;
   border: 1px solid var(--chrome-line);
   border-radius: 999px;
   padding: 0.25rem 0.7rem;
   color: var(--chrome-accent) !important;
-  background: #1e3a2f;
+  background: var(--chrome-chip-bg);
 }
 
 .page-shell {

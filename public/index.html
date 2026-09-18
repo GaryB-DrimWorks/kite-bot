@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark" data-scheme="ocean" data-theme-scope="app">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -21,7 +21,32 @@
       <a href="/portals/provider">Provider</a>
       <a href="/portals/sponsor">Sponsor</a>
     </nav>
-    <a class="tier-chip" id="tier-chip" href="/join">Visitor</a>
+    <div class="chrome-tools">
+      <label class="theme-ctrl">
+        <span>Theme</span>
+        <select id="theme-mode" aria-label="Light or dark">
+          <option value="dark">Dark</option>
+          <option value="light">Light</option>
+        </select>
+      </label>
+      <label class="theme-ctrl">
+        <span>Scheme</span>
+        <select id="theme-scheme" aria-label="Colour scheme">
+          <option value="ocean">Ocean</option>
+          <option value="sand">Sand</option>
+          <option value="forest">Forest</option>
+          <option value="slate">Slate</option>
+        </select>
+      </label>
+      <label class="theme-ctrl">
+        <span>Apply</span>
+        <select id="theme-scope" aria-label="Theme scope">
+          <option value="app">App-wide</option>
+          <option value="page">This page</option>
+        </select>
+      </label>
+      <a class="tier-chip" id="tier-chip" href="/join">Visitor</a>
+    </div>
   </header>
 
   <header class="live-header">
@@ -55,6 +80,16 @@
         <label><input type="radio" name="skill" value="intermediate"> Intermediate</label>
         <label><input type="radio" name="skill" value="advanced"> Advanced</label>
       </div>
+      <div class="sort-bar" role="group" aria-label="Sort spots">
+        <span class="sort-label">Sort</span>
+        <button type="button" class="sort-btn active" data-sort="alpha" data-dir="asc">A–Z</button>
+        <button type="button" class="sort-btn" data-sort="travel-time" data-dir="asc">Travel time</button>
+        <button type="button" class="sort-btn" data-sort="travel-km" data-dir="asc">Travel distance</button>
+        <button type="button" class="sort-btn" data-sort="on" data-dir="desc">Most on</button>
+        <button type="button" class="sort-btn" data-sort="favourite" data-dir="desc">My favourite</button>
+        <button type="button" class="sort-btn" data-sort="popular" data-dir="desc">Most popular</button>
+        <button type="button" class="sort-btn" data-sort="mates" data-dir="desc">Most mates</button>
+      </div>
     </div>
   </header>
 
@@ -69,6 +104,21 @@
     <p id="stations"></p>
     <p class="proto"><strong>Note:</strong> Data and images on this page are for prototyping purposes only: we'll secure proper subscription access with the content owners once the feature set is bedded down.</p>
   </footer>
+
+  <dialog class="notes-modal" id="notesModal">
+    <form method="dialog" class="notes-modal-inner">
+      <header>
+        <h2 id="notesModalTitle">Spot notes</h2>
+        <button type="submit" class="notes-modal-close" aria-label="Close">×</button>
+      </header>
+      <div class="notes-modal-body" id="notesModalBody"></div>
+      <footer>
+        <a id="notesModalFull" href="/notes">Open full notes page</a>
+        <button type="submit" value="close">Close</button>
+      </footer>
+    </form>
+  </dialog>
+
   <script src="/chrome.js"></script>
   <script src="/live.js"></script>
 </body>

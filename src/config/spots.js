@@ -127,7 +127,7 @@ export const SPOTS = [
     hazards: [
       "Strong harbour current",
       "Shallow reef at low tide",
-      "Outgoing tide can sweep you west"
+      "Outgoing tide can sweep you east"
     ],
     launchLand: "Incoming to high tide only. Do not kite the outgoing spring tide.",
     parking: "Meola Reef / Pt Chev beach. Free.",

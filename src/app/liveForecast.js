@@ -1,4 +1,5 @@
 import { featuredCameras, matchesSpotQuery, matchesWindDir, CAMERA_LINKS } from "../config/cameras.js";
+import { DEFAULT_LOCATION, getSpot } from "../config/spots.js";
 import { listNotes } from "../notes/store.js";
 import {
   SKILL_KEY,
@@ -9,6 +10,8 @@ import {
 } from "../skills/circles.js";
 import { sector8 } from "../utils/wind.js";
 import { getRegionalWeather } from "../weather/openMeteo.js";
+
+const FILL_SCORE = { green: 5, blue: 3, orange: 2, white: 0, red: -2 };
 
 function wxSpotsFromCameras(cameras) {
   const seen = new Set();
@@ -49,6 +52,53 @@ function nextHoursSummary(hourly) {
   };
 }
 
+function haversineKm(lat1, lon1, lat2, lon2) {
+  const toRad = (deg) => (deg * Math.PI) / 180;
+  const r = 6371;
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
+  return r * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+function onScore(circles, verdict) {
+  if (!circles?.length) return -10;
+  const fillPts = circles.reduce((sum, circle) => sum + (FILL_SCORE[circle.fill] ?? 0), 0);
+  const verdictBonus =
+    verdict?.cls === "go" ? 8 : verdict?.cls === "maybe" ? 2 : verdict?.verdict === "WRONG DIR" ? -12 : -4;
+  return fillPts + verdictBonus;
+}
+
+function spotMeta(camera) {
+  const spot = getSpot(camera.spotId) || null;
+  const origin = DEFAULT_LOCATION;
+  const travelKm =
+    camera.lat != null && camera.lon != null
+      ? Math.round(haversineKm(origin.lat, origin.lon, camera.lat, camera.lon) * 10) / 10
+      : null;
+  return {
+    travelFromCbdMin: spot?.travelFromCbdMin ?? null,
+    travelKm,
+    popularity: spot?.popularity ?? 0,
+    localTips: spot?.localTips || "",
+    hazards: spot?.hazards || [],
+    launchLand: spot?.launchLand || "",
+    parking: spot?.parking || "",
+    bestTide: spot?.bestTide || "",
+    tip: typeof camera.notes === "string" ? camera.notes : ""
+  };
+}
+
+function notesSummary(notes) {
+  if (!notes?.length) return "";
+  return notes
+    .slice(0, 2)
+    .map((note) => note.title)
+    .join(" · ");
+}
+
 export async function buildLiveForecast(query = {}) {
   const cameras = featuredCameras();
   const skill = normalizeSkill(query.skill);
@@ -82,7 +132,7 @@ export async function buildLiveForecast(query = {}) {
   for (const camera of cameras) {
     if (spot && !matchesSpotQuery(camera, spot)) continue;
     const windDir = filter === "all" ? "" : autoDir;
-    if (windDir && !matchesWindDir(camera, windDir) && filter !== "all") continue;
+    if (filter !== "all" && windDir && !matchesWindDir(camera, windDir)) continue;
 
     const conditions = byWx.get(wxKey(camera)) || null;
     const kn = conditions?.effectiveWindKn ?? conditions?.windSpeedKn ?? null;
@@ -98,13 +148,16 @@ export async function buildLiveForecast(query = {}) {
 
     if (circles && !passesSkillFilter(circles, skill)) continue;
 
-    const cameraNotes = notes.filter(
+    const spotNotes = notes.filter(
       (note) =>
         note.kind === "spot" && (note.spotId === camera.spotId || note.spotId === camera.id)
     );
+    const meta = spotMeta(camera);
+    const { notes: _cameraTip, ...cameraRest } = camera;
 
     cards.push({
-      ...camera,
+      ...cameraRest,
+      tip: meta.tip,
       conditions: conditions
         ? {
             windSpeedKn: conditions.windSpeedKn,
@@ -119,7 +172,17 @@ export async function buildLiveForecast(query = {}) {
       forecast: conditions ? nextHoursSummary(conditions.hourly) : null,
       circles,
       verdict,
-      notes: cameraNotes.slice(0, 4)
+      onScore: onScore(circles, verdict),
+      travelFromCbdMin: meta.travelFromCbdMin,
+      travelKm: meta.travelKm,
+      popularity: meta.popularity,
+      localTips: meta.localTips,
+      hazards: meta.hazards,
+      launchLand: meta.launchLand,
+      parking: meta.parking,
+      bestTide: meta.bestTide,
+      notes: spotNotes.slice(0, 8),
+      notesSummary: notesSummary(spotNotes) || meta.tip || meta.localTips || "No notes yet"
     });
   }
 

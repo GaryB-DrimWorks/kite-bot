@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark" data-scheme="ocean">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Notes &amp; advice — KAN</title>
-  <meta name="description" content="Create and edit general and spot-specific kite notes tagged by skill and new-to-spot.">
+  <meta name="description" content="Create and edit general and spot-specific kite notes tagged by skill and new-to-spot. Import or export HTML and Markdown.">
   <link rel="stylesheet" href="/chrome.css">
   <link rel="stylesheet" href="/styles.css">
   <link rel="stylesheet" href="/pages.css">
@@ -21,12 +21,14 @@
       <a href="/portals/provider">Provider</a>
       <a href="/portals/sponsor">Sponsor</a>
     </nav>
-    <a class="tier-chip" id="tier-chip" href="/join">Visitor</a>
+    <div class="chrome-tools">
+      <a class="tier-chip" id="tier-chip" href="/join">Visitor</a>
+    </div>
   </header>
   <div class="page-shell">
-    <p class="eyebrow">Admin-friendly capture</p>
+    <p class="eyebrow">Spot notes editor</p>
     <h1>Notes &amp; advice</h1>
-    <p class="muted">Tag audience as Beginner, Intermediate, Advanced/Expert, and New to this spot. Filters match the Live/Forecast skill toggle.</p>
+    <p class="muted">Tag audience as Beginner, Intermediate, Advanced/Expert, and New to this spot. Filters match the Live/Forecast skill toggle. Import or export HTML and Markdown files.</p>
 
     <form class="filters-lite" id="note-filters">
       <label>Spot
@@ -45,6 +47,15 @@
       <label class="check"><input type="checkbox" name="newToSpot" id="filter-new"> New to this spot only</label>
       <button type="submit">Filter</button>
     </form>
+
+    <div class="io-bar">
+      <button type="button" id="export-md">Export Markdown</button>
+      <button type="button" id="export-html">Export HTML</button>
+      <label class="file-btn">Import file
+        <input type="file" id="import-file" accept=".md,.markdown,.html,.htm,.txt,text/markdown,text/html">
+      </label>
+      <span class="muted" id="io-status"></span>
+    </div>
 
     <section class="grid">
       <article class="panel">
@@ -67,7 +78,7 @@
             <select name="spotId" id="note-spot"></select>
           </label>
           <input name="title" required maxlength="120" placeholder="Title">
-          <textarea name="body" required maxlength="4000" placeholder="Launch notes, tide quirks, who this is for…"></textarea>
+          <textarea name="body" required maxlength="4000" rows="8" placeholder="Launch notes, tide quirks, who this is for… Markdown-friendly."></textarea>
           <fieldset class="audience">
             <legend>Audience</legend>
             <label class="check"><input type="checkbox" name="audience" value="beginner"> Beginner</label>
