@@ -1,10 +1,9 @@
-# App-only compose at the GitHub repo root (Dockerfile WORKDIR /app, copies src + public).
-# VPS parent layout: copy deploy/hostinger/docker-compose.yml to /opt/auckland-kite-bot/
-# (build.context: ./app). See docs/hostinger-deploy-plan.md.
+# Copy to /opt/auckland-kite-bot/docker-compose.yml (parent of the git clone).
+# Build context is ./app because the repo Dockerfile lives at the clone root.
 services:
   auckland-kite-bot:
     build:
-      context: .
+      context: ./app
       dockerfile: Dockerfile
     container_name: auckland-kite-bot
     restart: unless-stopped

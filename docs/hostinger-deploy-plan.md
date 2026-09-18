@@ -1,22 +1,36 @@
 # Hostinger deploy plan — kite-bot.drim.works
 
-**Status:** ready after PR #1 merge (`main` @ `ac24af7`, 2026-09-17 NZST)  
-**VPS:** Hostinger KVM `1801176`  
+**Status:** GitHub ready (`main` @ `0bcef38`, PR #2, 2026-09-18). SSH cutover is **not done** — Cursor Cloud has no deploy key for this VPS.  
+**VPS:** Hostinger KVM `1801176` (`srv1801176.hstgr.cloud` / `2.25.77.2`)  
 **App path on VPS:** `/opt/auckland-kite-bot/`  
 **Public URL:** https://kite-bot.drim.works  
 **GitHub:** https://github.com/GaryB-DrimWorks/kite-bot  
 
 This plan deploys the **web app first** (cameras Live|Forecast, notes, membership stubs). Keep WhatsApp on the Grok Bot / KAN Bot bridge for now — do **not** re-enable Baileys on the VPS until a dedicated number is ready.
 
+### Live recon (2026-09-18, from Cursor Cloud)
+
+| Check | Result |
+|-------|--------|
+| `dig kite-bot.drim.works` | **NXDOMAIN** (no A/CNAME). Apex `drim.works` → `2.25.77.2` |
+| SSH `:22` | Open; `publickey,password`. This agent: **permission denied** (no key) |
+| `:3000` from the internet | Closed (compose should bind localhost only) |
+| nginx | `1.24.0` Ubuntu. HTTP `Host: kite-bot.drim.works` → **404** (no vhost) |
+| Default HTTPS | `ai-dictionary.drim.works` (“Catch the AI Wave”). Leave that vhost as `default_server` |
+
+The historical **HTTP 500** on the hostname is stale. Public failure mode today is **DNS missing** plus **no kite-bot vhost**. Do not point a new vhost at the AI Dictionary root.
+
+On the VPS, run `sudo bash /opt/auckland-kite-bot/app/scripts/hostinger-cutover.sh` (add `--nginx` to drop in the vhost). Or paste this file into Hostinger’s agent.
+
 ---
 
 ## 0. Preconditions
 
-- [ ] SSH access to KVM `1801176` as the usual deploy user
-- [ ] Domain `kite-bot.drim.works` DNS → this VPS (already in use; site previously returned HTTP 500)
-- [ ] Reverse proxy (nginx/Caddy/Hostinger panel) can point the vhost to `127.0.0.1:3000`
+- [ ] SSH access to KVM `1801176` as the usual deploy user (`root@2.25.77.2` or `root@srv1801176.hstgr.cloud`)
+- [ ] Hostinger DNS **A** record `kite-bot` → `2.25.77.2` (currently NXDOMAIN; NS is Hostinger `dns-parking.com`)
+- [ ] Reverse proxy (nginx) vhost `kite-bot.drim.works` → `127.0.0.1:3000` (not the default AI Dictionary site)
 - [ ] Docker + Docker Compose installed on the VPS
-- [ ] GitHub `main` includes the Live|Forecast dashboard (PR #1 squashed)
+- [x] GitHub `main` includes the Live\|Forecast dashboard (PR #1) and app-only compose (PR #2)
 
 ---
 
@@ -27,7 +41,7 @@ This plan deploys the **web app first** (cameras Live|Forecast, notes, membershi
 | Node app on `:3000` serving `/`, `/live`, `/forecast`, `/notes`, `/join`, portals, `/health`, `/api/*` | Live Clerk / Stripe keys |
 | `WHATSAPP_DISABLED=1` (web-only) | VPS Baileys session |
 | Persistent `DATA_PATH` volume for notes/session JSON | Full Postgres for membership (JSON stub is enough) |
-| Fix reverse-proxy → app so the domain stops 500 | Camera still/chart equal-height polish |
+| DNS + nginx vhost so the domain answers 200 (not NXDOMAIN / 404 / 500) | Camera still/chart equal-height polish |
 | `PUBLIC_ORIGIN=https://kite-bot.drim.works` | Session-call teaser deep-links cutover |
 
 ---
@@ -38,9 +52,9 @@ Keep the existing folder name so volumes and muscle memory stay put:
 
 ```text
 /opt/auckland-kite-bot/
-  docker-compose.yml          # create/update (not in GitHub yet — see §3)
+  docker-compose.yml          # copy from app/deploy/hostinger/docker-compose.yml
   .env                        # secrets — never commit
-  app/                        # git checkout of kite-bot (or build context)
+  app/                        # git checkout of kite-bot (build context)
   data/
     app/                      # DATA_PATH (notes, kb_session stubs, plans)
     whatsapp/                 # unused while WHATSAPP_DISABLED=1
@@ -50,7 +64,9 @@ Keep the existing folder name so volumes and muscle memory stay put:
 Two valid shapes:
 
 **A — Preferred for this cutover (app-only Compose)**  
-Build from GitHub `Dockerfile`, mount `./data/app` → `/app/data`, no Postgres, no Baileys.
+Parent compose (`deploy/hostinger/docker-compose.yml`) builds `./app`, mounts `./data/app` → `/app/data`, no Postgres, no Baileys.
+
+The GitHub repo also has a root `docker-compose.yml` with `build.context: .` for local / clone-as-root use. Do **not** copy that file to the parent folder — context would miss `Dockerfile`.
 
 **B — Keep old Compose**  
 Retain `auckland-kite-postgres` if you want continuity, but the current app does **not** require Postgres for the web MVP (JSON under `DATA_PATH`). You can leave Postgres running unused, or remove it after backup.
@@ -59,7 +75,7 @@ Retain `auckland-kite-postgres` if you want continuity, but the current app does
 
 ## 3. Sample `docker-compose.yml` (app-only)
 
-Create or replace `/opt/auckland-kite-bot/docker-compose.yml`:
+Create or replace `/opt/auckland-kite-bot/docker-compose.yml` from `deploy/hostinger/docker-compose.yml`:
 
 ```yaml
 services:
@@ -119,7 +135,16 @@ Rules:
 
 ## 5. Deploy steps (first time / refresh from `main`)
 
-SSH in, then:
+SSH in, then either run the helper:
+
+```bash
+sudo bash /opt/auckland-kite-bot/app/scripts/hostinger-cutover.sh
+# first time, clone first:
+#   sudo mkdir -p /opt/auckland-kite-bot && sudo git clone https://github.com/GaryB-DrimWorks/kite-bot.git /opt/auckland-kite-bot/app
+#   sudo bash /opt/auckland-kite-bot/app/scripts/hostinger-cutover.sh --nginx
+```
+
+Or the equivalent by hand:
 
 ```bash
 cd /opt/auckland-kite-bot
@@ -134,6 +159,7 @@ fi
 # 2) Env (create once)
 test -f .env || cp app/.env.example .env
 # edit .env: PUBLIC_ORIGIN, WHATSAPP_DISABLED=1, DATA_PATH=/app/data
+cp app/deploy/hostinger/docker-compose.yml docker-compose.yml
 
 mkdir -p data/app
 
@@ -150,31 +176,46 @@ Expect `/health` JSON OK and `/` → `200`.
 
 ---
 
-## 6. Reverse proxy (fix the HTTP 500)
+## 6. DNS + reverse proxy (fix NXDOMAIN / 404 / old 500)
 
-`kite-bot.drim.works` previously returned **500** — treat that as proxy/upstream misconfig until proven otherwise.
+`kite-bot.drim.works` is **NXDOMAIN** as of 2026-09-18. Earlier reports of HTTP **500** were proxy/upstream misconfig; today there is no vhost at all (HTTP Host header → nginx 404). The default TLS cert is `ai-dictionary.drim.works` only.
 
 Checklist:
 
-1. Vhost server_name = `kite-bot.drim.works` (+ www redirect if used)
-2. Upstream = `http://127.0.0.1:3000` (not an old reports host or dead container)
-3. Proxy headers: `Host`, `X-Forwarded-For`, `X-Forwarded-Proto $scheme`
-4. TLS cert valid (Let's Encrypt / Hostinger SSL)
-5. After compose up: `curl -sS -o /dev/null -w "%{http_code}\n" https://kite-bot.drim.works/health` → `200`
+1. Hostinger hPanel → DNS for `drim.works`: **A** `kite-bot` → `2.25.77.2` (TTL 300). Wait until `dig +short kite-bot.drim.works` returns that IP.
+2. Vhost `server_name` = `kite-bot.drim.works` (do **not** set `default_server`)
+3. Upstream = `http://127.0.0.1:3000` (not the AI Dictionary root or a dead container)
+4. Proxy headers: `Host`, `X-Forwarded-For`, `X-Forwarded-Proto $scheme`
+5. TLS cert for this hostname (`certbot --nginx -d kite-bot.drim.works`)
+6. After compose + DNS + cert: `curl -sS -o /dev/null -w "%{http_code}\n" https://kite-bot.drim.works/health` → `200`
 
-If still 500: check proxy error log, `docker compose logs --tail=100 auckland-kite-bot`, and confirm nothing else is bound to `:3000`.
+If still failing: `dig`, proxy error log, `docker compose logs --tail=100 auckland-kite-bot`, and `ss -lntp | grep 3000` (should be `127.0.0.1:3000` only).
 
-Example nginx location:
+Drop-in file: `deploy/hostinger/nginx-kite-bot.drim.works.conf`
 
 ```nginx
-location / {
-  proxy_pass http://127.0.0.1:3000;
-  proxy_http_version 1.1;
-  proxy_set_header Host $host;
-  proxy_set_header X-Real-IP $remote_addr;
-  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-  proxy_set_header X-Forwarded-Proto $scheme;
+server {
+    listen 80;
+    listen [::]:80;
+    server_name kite-bot.drim.works;
+
+    location / {
+        proxy_pass http://127.0.0.1:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
 }
+```
+
+```bash
+sudo cp /opt/auckland-kite-bot/app/deploy/hostinger/nginx-kite-bot.drim.works.conf \
+  /etc/nginx/sites-available/kite-bot.drim.works
+sudo ln -sfn /etc/nginx/sites-available/kite-bot.drim.works /etc/nginx/sites-enabled/
+sudo nginx -t && sudo systemctl reload nginx
+sudo certbot --nginx -d kite-bot.drim.works
 ```
 
 ---
@@ -191,6 +232,7 @@ location / {
 | `/dashboard` | Old ranked UI still reachable |
 | Open-Meteo | Cards populate (or graceful empty if rate-limited) |
 | WhatsApp group | Unchanged — still Grok Bot / KAN Bot bridge |
+| `https://ai-dictionary.drim.works` | Still 200 (unchanged default site) |
 
 ---
 
@@ -221,32 +263,35 @@ docker compose up -d
 
 ```bash
 cd /opt/auckland-kite-bot/app && git pull --ff-only origin main && cd ..
+cp app/deploy/hostinger/docker-compose.yml docker-compose.yml
 docker compose build
 docker compose up -d
 curl -sS https://kite-bot.drim.works/health
 ```
 
-Optional later: GitHub Action → SSH deploy on `main` push (not required for first cutover).
+Optional later: GitHub Action → SSH deploy on `main` push (not required for first cutover). Needs a deploy key in GitHub Secrets plus the same key on the VPS — this Cursor Cloud environment does not have that key today.
 
 ---
 
 ## 10. Follow-ups (not blocking this deploy)
 
-1. Commit a real `docker-compose.yml` (+ maybe `compose.web.yml`) into the GitHub repo so VPS and docs match.
+1. ~~Commit a real `docker-compose.yml` into GitHub~~ done (PR #2). Parent-layout copy lives in `deploy/hostinger/`.
 2. Wire Clerk + Stripe when freemium goes live.
 3. Session-call teasers → deep links after cameras feel solid (`docs/session-call-teaser-roadmap.md`).
-4. Reconcile Hostinger Ideal/OK/Sketchy bands vs skill-circle fills (`docs/hostinger-mvp-prompt.md` vs `faq/skill-icons.md`).
+4. Reconcile Hostinger Ideal/OK/Sketchy bands vs skill-circle fills (`docs/hostinger-mvp-prompt.md` vs `docs/skill-icons.md`).
 5. Dedicated WhatsApp number / VPS Baileys only when Grok Bot bridge is no longer the production path.
+6. Add a VPS deploy key to Cursor Cloud / GitHub Actions if you want agents to finish SSH cutovers.
 
 ---
 
 ## 11. Quick owner checklist
 
-1. Merge done ✅ (PR #1 → `main`)
-2. SSH → pull `main` into `/opt/auckland-kite-bot/app`
-3. Set `.env` with `WHATSAPP_DISABLED=1` + `PUBLIC_ORIGIN`
-4. `docker compose build && up -d`
-5. Fix proxy until `https://kite-bot.drim.works/health` is 200
-6. Click through Live / Forecast / Notes / Join once
+1. Merge done ✅ (PR #1 dashboard, PR #2 compose → `main` @ `0bcef38`)
+2. Hostinger DNS: A `kite-bot` → `2.25.77.2` until `dig` resolves
+3. SSH → `scripts/hostinger-cutover.sh` (or pull `main` into `/opt/auckland-kite-bot/app` by hand)
+4. Set `.env` with `WHATSAPP_DISABLED=1` + `PUBLIC_ORIGIN`
+5. `docker compose build && up -d` — smoke `http://127.0.0.1:3000/health`
+6. Enable nginx vhost + certbot (do not steal `ai-dictionary` default)
+7. Click through Live / Forecast / Notes / Join once
 
-When you are ready for the SSH cutover, say the word and we can walk it step-by-step (or hand Hostinger’s agent this file + `hostinger-mvp-prompt.md`).
+To finish from Cursor Cloud, add an SSH public key for `root@srv1801176.hstgr.cloud` (or a deploy user) to this environment and say **proceed** again. Until then, run §5 on the VPS or hand Hostinger’s agent this file + `hostinger-mvp-prompt.md`.
